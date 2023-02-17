@@ -15,17 +15,16 @@ class Budget:
         #get the user input
         self.getUserTransactions()
 
-        #sort the input by category
-        self.categorySort()
-
-        #add identical categories together
-        self.categoryAdd()
+        #sort the input by category and return dict of totals
+        categoryTotal = self.categorySort()
 
         #display totals for each category
         self.displayTotals()
 
     def getUserTransactions(self):
         """Prompts the user for thier transaction information"""
+
+        isdone = 'n'
 
         while(isdone != 'y'):
 
@@ -42,9 +41,10 @@ class Budget:
 
             while(endloop):
                 category = input("Enter transaction category: ")
-
-                if category.lower() not in possibleCategories.lower():
-                    raise Exception("Category input is not part of possible catgories. Try again.")
+                
+                if not any(category in x for x in possibleCategories):
+                    #raise Exception("Category input is not part of possible catgories. Try again.")
+                    pass
                 else:
                     endloop = False
 
@@ -64,6 +64,8 @@ class Budget:
             #ask if user is done inputing transactions
             print("Are you finished entering transaction information?")
             isdone = input("Enter 'y' for YES and 'n' for NO. ")
+
+            self.categorySort()
             
 
     def addTo_dataTable(self, transaction):
@@ -78,13 +80,62 @@ class Budget:
         """
         Sorts transactions by category.
         """
+        transCopy = self.dataTable[:]
+
+        sortedTrans = sorted(transCopy, key = lambda x : x[1])
+
+        transHousing = []
+        transInsurance = []
+        transFood = []
+        transGas = []
+        transServices = []
+        transDebt = []
+        transSavings = []
+        transHealth = []
+        transOther = []
+        transIncome = []
+
+        for trans in sortedTrans:
+            if trans[1].lower() == "housing":
+                transHousing.append(trans)
+            elif trans[1].lower() == "insurance":
+                transInsurance.append(trans)
+            elif trans[1].lower() == 'food':
+                transFood.append(trans)
+            elif trans[1].lower() == 'gas':
+                transGas.append(trans)
+            elif trans[1].lower() == 'service bills':
+                transServices.append(trans)
+            elif trans[1].lower() == 'debt':
+                transDebt.append(trans)
+            elif trans[1].lower() == 'savings':
+                transSavings.append(trans)
+            elif trans[1].lower() == 'health':
+                transHealth.append(trans)
+            elif trans[1].lower() == 'other':
+                transOther.append(trans)
+            elif trans[1].lower() == 'income':
+                transIncome.append(trans)
+
+        
+            
 
     def categoryAdd(self):
         """
         Adds identical categories together to produce a total for that category.
         """
 
+        pass
+
     def displayTotals(self):
         """
         Displays the totals of each category to the user.
         """
+
+        #for trans in self.dataTable:
+            #print(trans)
+
+        
+
+#main program
+Budget()
