@@ -65,7 +65,10 @@ class Budget:
             print("Are you finished entering transaction information?")
             isdone = input("Enter 'y' for YES and 'n' for NO. ")
 
-            self.categorySort()
+        sortedTrans = []
+        sortedTrans = self.categorySort()
+
+        self.categoryAdd(sortedTrans)
             
 
     def addTo_dataTable(self, transaction):
@@ -84,58 +87,76 @@ class Budget:
 
         sortedTrans = sorted(transCopy, key = lambda x : x[1])
 
-        transHousing = []
-        transInsurance = []
-        transFood = []
-        transGas = []
-        transServices = []
-        transDebt = []
-        transSavings = []
-        transHealth = []
-        transOther = []
-        transIncome = []
+        return sortedTrans
 
-        for trans in sortedTrans:
-            if trans[1].lower() == "housing":
-                transHousing.append(trans)
-            elif trans[1].lower() == "insurance":
-                transInsurance.append(trans)
-            elif trans[1].lower() == 'food':
-                transFood.append(trans)
-            elif trans[1].lower() == 'gas':
-                transGas.append(trans)
-            elif trans[1].lower() == 'service bills':
-                transServices.append(trans)
-            elif trans[1].lower() == 'debt':
-                transDebt.append(trans)
-            elif trans[1].lower() == 'savings':
-                transSavings.append(trans)
-            elif trans[1].lower() == 'health':
-                transHealth.append(trans)
-            elif trans[1].lower() == 'other':
-                transOther.append(trans)
-            elif trans[1].lower() == 'income':
-                transIncome.append(trans)
-
-        
-            
-
-    def categoryAdd(self):
+    def categoryAdd(self, sortedTrans):
         """
         Adds identical categories together to produce a total for that category.
         """
+        housingTotal = 0
+        insuranceTotal = 0
+        foodTotal = 0
+        gasTotal = 0
+        servicesTotal = 0
+        debtTotal = 0
+        savingsTotal = 0
+        healthTotal = 0
+        otherTotal = 0
+        incomeTotal = 0
 
-        pass
+        for trans in sortedTrans:
+            if trans[1].lower() == "housing":
+                #add together transaction totals
+                housingTotal += float(trans[2])
+            elif trans[1].lower() == "insurance":
+                #add together transaction totals
+                insuranceTotal += float(trans[2])
+            elif trans[1].lower() == 'food':
+                #add together transaction totals
+                foodTotal += float(trans[2])
+            elif trans[1].lower() == 'gas':
+                #add together transaction totals
+                gasTotal += float(trans[2])
+            elif trans[1].lower() == 'service bills':
+                #add together transaction totals
+                servicesTotal += float(trans[2])
+            elif trans[1].lower() == 'debt':
+                #add together transaction totals
+                debtTotal += float(trans[2])
+            elif trans[1].lower() == 'savings':
+                #add together transaction totals
+                savingsTotal += float(trans[2])
+            elif trans[1].lower() == 'health':
+                #add together transaction totals
+                healthTotal += float(trans[2])
+            elif trans[1].lower() == 'other':
+                #add together transaction totals
+                otherTotal += float(trans[2])
+            elif trans[1].lower() == 'income':
+                #add together transaction totals
+                incomeTotal += float(trans[2])
 
-    def displayTotals(self):
+        totalDict = {
+            "HOUSING" : housingTotal,
+            "INSURANCE" : insuranceTotal,
+            "FOOD" : foodTotal,
+            "GAS" : gasTotal,
+            "SERVICE BILLS" : servicesTotal,
+            "DEBT" : debtTotal,
+            "SAVINGS" : savingsTotal,
+            "HEALTH" : healthTotal,
+            "OTHER" : otherTotal,
+            "INCOME" : incomeTotal
+        }
+
+        self.displayTotals(totalDict)
+
+    def displayTotals(self, totalDict):
         """
         Displays the totals of each category to the user.
         """
 
-        #for trans in self.dataTable:
-            #print(trans)
-
-        
+        print(totalDict)
 
 #main program
 Budget()
