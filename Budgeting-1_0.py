@@ -15,11 +15,8 @@ class Budget:
         #get the user input
         self.getUserTransactions()
 
-        #sort the input by category and return dict of totals
+        #sort the input by category
         categoryTotal = self.categorySort()
-
-        #display totals for each category
-        self.displayTotals()
 
     def getUserTransactions(self):
         """Prompts the user for thier transaction information"""
@@ -156,7 +153,8 @@ class Budget:
         Displays the totals of each category to the user.
         """
 
-        print(totalDict)
+        for key, val in totalDict.items():
+            print(key, "-", val)
 
 #main program
 Budget()
