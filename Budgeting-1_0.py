@@ -1,5 +1,4 @@
 
-
 class Budget:
     """
     Budgeting software that helps the user to decide
