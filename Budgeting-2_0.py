@@ -8,6 +8,7 @@ class Budget:
 
         #assign class variables
         self.dataTable = dataTable[:]
+        self.categoriesDict = self.loadCategories()
 
         #run the program
         self.run()
@@ -29,6 +30,25 @@ class Budget:
             print("File not found!")
 
         print(userTransactionsDF)
+
+    def loadCategories(self):
+
+        categoriesDict = {
+            "HOUSING" : [],
+            "TRANSPORT" : ['shell', 'chevron', 'maverik', 'les schwab', '7-eleven'],
+            "FOOD" : ['qdoba', 'saladworks', "auntie anne's", "wetzel's", 'five guys', 'costa vida', 'uber eats', 'jack in the box', 'jamba juice', 'einstein bagels', 'doordash', 'grubhub', 'panda express', 'dunkin', 'keva juice', 'wendy', 'instacart', 'dairy queen', 'subway', 'in n out burger', 'taco bell', 'dutch bros', 'raising canes', 'mcdonalds', 'trader joes','kroger','wholefds', 'safeway', 'albertsons', 'smiths', 'winco', 'save mart', 'wal-mart', 'target', 'food maxx', 'costco', 'grocery outlet', 'raley', 'panera bread', 'pizza hut'],
+            "UTILITIES" : ['vzwrlss', 'sprint', 'tmobile', 'nv energy'],
+            "INSURANCE" : ['geico', 'hometown health', 'ambetter', 'farmers ins', 'gerber', 'anthem', 'vsp', 'metlife'],
+            "MEDICAL-HEALTH" : ['walgreens', 'cvs'],
+            "DEBT" : ['discover'],
+            "SAVINGS" : ['americanexpress'],
+            "OTHER" : ['petco', 'ulta', 'hot topic', 'forever 21', 'sally beauty supply', 'lush', 'chewy', 'bath and body works', 'barnesnoble', "victoria's secret", 'adobe', 'usps', 'amazon', 'amzn', 'dollar tree', 'lowe', 'ross', 'e bay', 'godaddy', 'bed bath &'],
+            "INCOME" : [],
+            "ENTERTAINMENT" : ['nintendo', 'hbo max', 'netflix', 'amc', 'hulu', 'spotify', 'paramount', 'disney plus', 'sling tv', 'apple', 'peacock', 'roku', 'amazon prime', 'galaxy', 'steam'],
+            "SERVICES" : []
+        }
+
+        return categoriesDict
 
 #class Budget:
     #"""
