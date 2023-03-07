@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class Budget:
     """Budgeting software that helps the user anaylze their budget without entering data manually."""
@@ -9,6 +10,7 @@ class Budget:
         #assign class variables
         self.dataTable = dataTable[:]
         self.categoriesDict = self.loadCategories()
+        self.recBudget = {50 : ['HOUSING', 'TRANSPORT', 'FOOD', 'UTILITIES', 'INSURANCE', 'MEDICAL-HEALTH'], 30 : ['OTHER', 'ENETERTAINMENT', 'SERVICES'], 20 : ['DEBT', 'SAVINGS']}
 
         #run the program
         self.run()
@@ -16,7 +18,36 @@ class Budget:
     def run(self):
         """runs the program once variables are initialized"""
         #get the user file
-        self.getUserTransactions()
+        userTransactionsDF = self.getUserTransactions()
+
+        #id categories based on description strings
+        self.sortTransactions(userTransactionsDF)
+
+        #display the user Transactions
+        self.displayTransactions(userTransactionsDF)
+
+        self.reviewInfo(userTransactionsDF)
+
+    def reviewInfo(self, userTransactionsDF):
+
+        #have user review information
+        print("Please review category information for accuracy.")
+        
+        answer = input("Is information correct? Enter y for YES and n for NO: ")
+        if answer == 'y':
+            return userTransactionsDF
+        elif answer == 'n':
+            userTransactionsDF = self.changeCategory(userTransactionsDF)
+
+            self.displayTransactions(userTransactionsDF)
+
+            userTransactionsDF = self.reviewInfo(userTransactionsDF)
+            return userTransactionsDF
+        else:
+            print("Unrecoginzed input. Please try again.")
+            userTransactionsDF = self.reviewInfo(userTransactionsDF)
+            return userTransactionsDF
+            
 
     def getUserTransactions(self):
         """Prompts the user to enter their file name so it can be uploaded."""
@@ -29,10 +60,10 @@ class Budget:
         except FileNotFoundError:
             print("File not found!")
 
-        print(userTransactionsDF)
+        return userTransactionsDF
 
     def loadCategories(self):
-
+        """Creates categories dictionary that assosciates certain description strings to that category for easy identification"""
         categoriesDict = {
             "HOUSING" : [],
             "TRANSPORT" : ['shell', 'chevron', 'maverik', 'les schwab', '7-eleven'],
@@ -49,6 +80,28 @@ class Budget:
         }
 
         return categoriesDict
+
+    def changeCategory(self, userTransactionsDF):
+        """Lets the user change a transaction's category"""
+
+        row = input("Please enter the row number of the item you want to change: ")
+
+        change = input("Enter the name of the category you would like to change to: ")
+
+        userTransactionsDF.iloc[int(row), 3]= change
+
+        return userTransactionsDF
+
+    def displayTransactions(self, userTransactionsDF):
+        """Displays the transaction list to the user so they can review it to see if the information looks correct"""
+
+        with pd.option_context('display.max_rows', None,
+                               'display.precision', 3,):
+            print(userTransactionsDF)
+
+    def sortTransactions(self, userTransactionsDF):
+        """identifies transaction category based on description"""
+        pass
 
 #class Budget:
     #"""
