@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import tkinter as tk
+from tkinter import ttk
 
 class Budget:
     """Budgeting software that helps the user anaylze their budget without entering data manually."""
@@ -13,37 +15,87 @@ class Budget:
         self.recBudget = {50 : ['HOUSING', 'TRANSPORT', 'FOOD', 'UTILITIES', 'INSURANCE', 'MEDICAL-HEALTH'], 30 : ['OTHER', 'ENETERTAINMENT', 'SERVICES'], 20 : ['DEBT', 'SAVINGS']}
         self.budgetType = bool
 
-        #let the user choose what they want to do
-        print("Welcome to 2023 Budgeting with Python")
-        print("****************************************")
-        print("Please choose from the options below")
-        print("1. Display Previous Data")
-        print("2. Run Budgeting Software")
+        self.runtkinter()
 
-        programStart = input("What would you like to do? (Pick by number): ")
 
-        if int(programStart) == 1:
-            #still need to build out this function
-            self.runPreviousData()
-        elif int(programStart) == 2:
-            self.runcalc()
-        else:
-            print("Error: unrecognized input")
+    def runtkinter(self):
+        root = tk.Tk()
+        root.title("Python Budgeting Software - v3.0")
 
-    def runcalc(self):
+        window_width = 600
+        window_height = 400
+
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+
+        center_x = int(screen_width / 2 - window_width / 2)
+        center_y = int(screen_height / 2 - window_height / 2)
+
+        root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
+
+        self.mainmenu(root)
+
+        root.mainloop()
+
+    def mainmenu(self, root):
+        mainmenuframe = tk.Frame(root)
+        mainmenuframe.pack(side="top", expand=True, fill="both")
+        introMessage = tk.Label(mainmenuframe, text="Welcome to 2023 Budgeting with Python")
+        introMessage2 = tk.Label(mainmenuframe, text="Please choose from the options below")
+        introMessage.pack()
+        introMessage2.pack()
+
+        prevData = ttk.Button(
+            mainmenuframe, 
+            text="Display Previous Data",
+            command=self.runPreviousData
+            )
+        runbudget = ttk.Button(
+            mainmenuframe,
+            text="Run Budgeting Software",
+            command=lambda: self.runcalc(mainmenuframe)
+        )
+
+        prevData.pack(
+            ipadx = 5,
+            ipady = 5,
+            expand = True
+        )
+        runbudget.pack(
+            ipadx = 5,
+            ipady = 5,
+            expand =  True
+        )
+
+    def runcalc(self, calcframe):
         """runs the program once variables are initialized"""
-        print("Please choose an option to get started")
-        print("1. Use Recomended Budget")
-        print("2. Enter Your Own Budgeting Categories")
 
-        runCalcProgram = input("What would you like to do? (Pick by number): ")
+        for widget  in calcframe.winfo_children():
+            widget.destroy()
 
-        if int(runCalcProgram) == 1:
-            self.budgetType = True
-        elif int(runCalcProgram) == 2:
-            self.budgetType = False
-        else:
-            print("Error: unrecognized input")
+        calcMessage = tk.Label(calcframe, text="Please choose an option to get started.")
+        calcMessage.pack()
+
+        recBudget = ttk.Button(
+            calcframe,
+            text="Use Recomended Budget"#,
+            #command=lambda:#set budgetType = True
+        )
+        ownBudget = ttk.Button(
+            calcframe,
+            text="Enter Your Own Budgeting Categories"#,
+            #command=lambda:#set budgetType = False
+        )
+        recBudget.pack(
+            ipadx = 5,
+            ipady = 5,
+            expand = True
+        )
+        ownBudget.pack(
+            ipadx = 5,
+            ipady = 5,
+            expand = True
+        )
 
         #get the user file
         userTransactionsDF = self.getUserTransactions()
@@ -64,6 +116,9 @@ class Budget:
 
         #determine how on budget the user is with the rec budget
         #or there personal budget
+
+    def runPreviousData(self):
+        pass
 
     def reviewInfo(self, userTransactionsDF):
 
