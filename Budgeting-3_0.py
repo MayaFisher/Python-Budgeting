@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import tkinter as tk
 from tkinter import ttk
+import tkinter.filedialog
+from tkinter.messagebox import showinfo
 
 class Budget:
     """Budgeting software that helps the user anaylze their budget without entering data manually."""
@@ -14,12 +16,14 @@ class Budget:
         self.categoriesDict = self.loadCategories()
         self.recBudget = {50 : ['HOUSING', 'TRANSPORT', 'FOOD', 'UTILITIES', 'INSURANCE', 'MEDICAL-HEALTH'], 30 : ['OTHER', 'ENETERTAINMENT', 'SERVICES'], 20 : ['DEBT', 'SAVINGS']}
         self.budgetType = bool
+        self.categoryList = []
 
         self.runtkinter()
 
 
     def runtkinter(self):
         root = tk.Tk()
+
         root.title("Python Budgeting Software - v3.0")
 
         window_width = 600
@@ -78,13 +82,13 @@ class Budget:
 
         recBudget = ttk.Button(
             calcframe,
-            text="Use Recomended Budget"#,
-            #command=lambda:#set budgetType = True
+            text="Use Recomended Budget",
+            command=lambda: self.getUserTransactions(calcframe)
         )
         ownBudget = ttk.Button(
             calcframe,
-            text="Enter Your Own Budgeting Categories"#,
-            #command=lambda:#set budgetType = False
+            text="Enter Your Own Budgeting Categories",
+            command=lambda: self.setbudgetCategories(calcframe)
         )
         recBudget.pack(
             ipadx = 5,
@@ -97,25 +101,53 @@ class Budget:
             expand = True
         )
 
-        #get the user file
-        userTransactionsDF = self.getUserTransactions()
-
         #id categories into preset based on description
 
         #sort categories based on category strings and account name
-        userTransactionsDF = self.sortTransactions(userTransactionsDF)
+        #userTransactionsDF = self.sortTransactions(userTransactionsDF)
 
         #display the user Transactions
-        self.displayTransactions(userTransactionsDF)
+        #self.displayTransactions(userTransactionsDF)
 
         #allow the user to review the information for correctness
-        self.reviewInfo(userTransactionsDF)
+        #self.reviewInfo(userTransactionsDF)
 
         #once the user verifies the information is correct
         #add together categories with the same name
 
         #determine how on budget the user is with the rec budget
         #or there personal budget
+
+    def setbudgetCategories(self, catframe):
+        for widget  in catframe.winfo_children():
+            widget.destroy()
+
+        categoryLabel = tk.Label(catframe, text="Please enter a category:")
+        categoryLabel.pack(fill="x", expand="True")
+
+        addButton = ttk.Button(
+            catframe, 
+            text="Add Category", 
+            command=lambda: self.addEntry(catframe)
+        )
+        addButton.pack()
+
+        doneButton = ttk.Button(
+            catframe, 
+            text="Finish", 
+            command=lambda: self.getUserTransactions(catframe)
+        )
+        doneButton.pack()
+
+    def addEntry(self, catframe):
+        entryFrame = ttk.Frame(catframe)
+        entryFrame.pack()
+
+        entryBox = ttk.Entry(entryFrame)
+        entryBox.pack()
+
+        self.categoryList.append(entryBox)
+        return self.categoryList
 
     def runPreviousData(self):
         pass
@@ -141,18 +173,15 @@ class Budget:
             return userTransactionsDF
             
 
-    def getUserTransactions(self):
+    def getUserTransactions(self, calcframe):
         """Prompts the user to enter their file name so it can be uploaded."""
 
-        filepath = input("Enter the path and name of the file (Ex: stored/filename.csv) ")
-
-        try:
+        filepath = tkinter.filedialog.askopenfile(parent=calcframe, mode="rb", title="Choose a File")
+        if filepath:
             data = pd.read_csv(filepath)
             userTransactionsDF = pd.DataFrame(data, columns=['Date', 'Original Description', 'Amount', 'Category', 'Account Name'])
-        except FileNotFoundError:
-            print("File not found!")
-
-        return userTransactionsDF
+            
+        self.displayTransactions(userTransactionsDF, calcframe)
 
     def loadCategories(self):
         """Creates categories dictionary that assosciates certain description strings to that category for easy identification"""
@@ -184,7 +213,7 @@ class Budget:
 
         return userTransactionsDF
 
-    def displayTransactions(self, userTransactionsDF):
+    def displayTransactions(self, userTransactionsDF, transactionFrame):
         """Displays the transaction list to the user so they can review it to see if the information looks correct"""
 
         with pd.option_context('display.max_rows', None,
