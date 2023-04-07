@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 import tkinter.filedialog
 from tkinter.messagebox import showinfo
+from pandastable import Table
 
 class Budget:
     """Budgeting software that helps the user anaylze their budget without entering data manually."""
@@ -101,6 +102,8 @@ class Budget:
             expand = True
         )
 
+        #need to select date range somehow.
+
         #id categories into preset based on description
 
         #sort categories based on category strings and account name
@@ -140,6 +143,7 @@ class Budget:
         doneButton.pack()
 
     def addEntry(self, catframe):
+        #needs to be changed to a dict
         entryFrame = ttk.Frame(catframe)
         entryFrame.pack()
 
@@ -180,6 +184,8 @@ class Budget:
         if filepath:
             data = pd.read_csv(filepath)
             userTransactionsDF = pd.DataFrame(data, columns=['Date', 'Original Description', 'Amount', 'Category', 'Account Name'])
+
+        #clean data first -> try to change categories based off of preset dict?
             
         self.displayTransactions(userTransactionsDF, calcframe)
 
@@ -216,9 +222,11 @@ class Budget:
     def displayTransactions(self, userTransactionsDF, transactionFrame):
         """Displays the transaction list to the user so they can review it to see if the information looks correct"""
 
-        with pd.option_context('display.max_rows', None,
-                               'display.precision', 3,):
-            print(userTransactionsDF)
+        for widget  in transactionFrame.winfo_children():
+            widget.destroy()
+
+        pt = Table(transactionFrame, dataframe=userTransactionsDF)
+        pt.show()
 
     def sortTransactions(self, userTransactionsDF):
         """identifies transaction category based on description"""
