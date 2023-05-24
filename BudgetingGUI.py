@@ -51,7 +51,7 @@ class BudgetGUI:
         prevData = ttk.Button(
             mainmenuframe, 
             text="Display Previous Data",
-            command=lambda: Budgeting4.runPreviousData()
+            command=lambda: self.runPreviousData(mainmenuframe)
             )
         runbudget = ttk.Button(
             mainmenuframe,
@@ -231,7 +231,7 @@ class BudgetGUI:
             text = "Finish",
             command=lambda: self.finishButtonClicked(frame, userTransactionsDF, usePredefinedCategories)
         )
-        finishButton.pack()
+        finishButton.grid()
 
     def finishButtonClicked(self, frame, userTransactionsDF, usePredefinedCategories):
         chart_data = Budgeting4.addCategories(userTransactionsDF, usePredefinedCategories, self.userCategory, self.userValues)
@@ -260,7 +260,7 @@ class BudgetGUI:
         #Find the maximum actual percentage for scaling
         max_actual_percentage = max(data[1] for data in chart_data)
 
-        #Create a turtl for drawing the chart
+        #Create a turtle for drawing the chart
         chart_turtle = turtle.Turtle()
         chart_turtle.penup()
         chart_turtle.goto(chart_origin_x, chart_origin_y)
@@ -306,6 +306,48 @@ class BudgetGUI:
         
         # Show a message box to notify the user
         tkinter.messagebox.showinfo("Save Successful", f"Data and chart saved.\nData File: {data_filename}\nChart File: {chart_filename}")
+
+    def runPreviousData(self, frame):
+        for widget  in frame.winfo_children():
+            widget.destroy()
+
+        folder_name = "BudgetingData"
+        files = []
+
+        #Check if the folder exists
+        if os.path.exists(folder_name):
+            #Get all files in the folder
+            files = os.listdir(folder_name)
+
+        if not files:
+            tkinter.messagebox.showinfo("No Previous Data", "No previous data found.")
+            return
+
+        #Create a new window to display the previous data
+        previousDataWindow = tkinter.Toplevel(self.root)
+        previousDataWindow.title("Previous Data")
+
+        #Create a scrollable frame to hold the data
+        canvas = tkinter.Canvas(previousDataWindow)
+        scrollbar = tkinter.Scrollbar(previousDataWindow, orient="vertical", command=canvas.yview)
+        scrollableFrame = tkinter.Frame(canvas)
+
+        scrollableFrame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=scrollableFrame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        #Iterate over the files and create labels to display the file names
+        for i, filename in enumerate(files):
+            fileLabel = tkinter.Label(scrollableFrame, text=f"File {i+1}: {filename}")
+            fileLabel.pack()
+
+        #Pack the canvas and scrollbar
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        #Add a button to close the window
+        closeButton = ttk.Button(previousDataWindow, text="Close", command=previousDataWindow.destroy)
+        closeButton.pack()
 
 root = tkinter.Tk()
 BudgetGUI(root)
