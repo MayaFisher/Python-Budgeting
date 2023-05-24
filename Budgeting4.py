@@ -4,10 +4,6 @@ import datetime
 from datetime import date
 import re 
 
-def runPreviousData():
-    #data persistence
-    pass
-
 def runcalc(filepath):
     """Runs the budgeting software"""
 
@@ -29,7 +25,7 @@ def addCategories(userTransactionsDF, usePredefinedCategories, userCategory, use
     recBudget = {50 : ['HOUSING', 'TRANSPORT', 'FOOD', 'UTILITIES', 'INSURANCE', 'MEDICAL-HEALTH'], 30 : ['OTHER', 'ENETERTAINMENT', 'SERVICES'], 20 : ['DEBT', 'SAVINGS']}
 
     if usePredefinedCategories:
-        #Procss predefined categories
+        #Process predefined categories
         categoriesDict = loadCategories()
         budgetDict = recBudget
     else:
@@ -99,7 +95,7 @@ def idCategories(userTransactionsDF, userCategory, usePredefinedCategories):
                     return category
         return None #Return None or a default category if no match is found
 
-    userTransactionsDF["Matched Category"] = userTransactionsDF["Orginal Description"].apply(find_category)
+    userTransactionsDF["Matched Category"] = userTransactionsDF["Original Description"].apply(find_category)
 
     return userTransactionsDF
 
