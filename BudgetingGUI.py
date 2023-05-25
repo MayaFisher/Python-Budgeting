@@ -10,6 +10,8 @@ from pandastable import Table
 import ast
 import datetime
 import os
+import numpy as np
+
 
 
 class BudgetGUI:
@@ -223,6 +225,14 @@ class BudgetGUI:
         for widget in frame.winfo_children():
             widget.destroy()
 
+        #Filter out non-numeric columns
+        numeric_columns = userTransactionsDF.select_dtypes(include=[np.number]).columns.tolist()
+        numeric_df = userTransactionsDF[numeric_columns]
+
+        if len(numeric_df.columns) == 0:
+            tkinter.messagebox.showinfo("No Numeric Data", "No numeric data available for display.")
+            return
+
         pt = Table(frame, dataframe=userTransactionsDF, showtoolbar=True)
         pt.show()
 
@@ -242,36 +252,38 @@ class BudgetGUI:
         for widget in frame.winfo_children():
             widget.destroy()
 
-        #Create a turtle screen
+        # Create a turtle screen
         screen = turtle.Screen()
-        screen.setup(width=800, height = 600)
+        screen.setup(width=800, height=600)
         screen.title("Budget Chart")
 
-        #Set up turtle chart parameters
+        # Set up turtle chart parameters
         chart_width = 400
         chart_height = 300
         chart_origin_x = -chart_width / 2
         chart_origin_y = -chart_height / 2
 
-        #Calculate the bar width and spacing
+        # Calculate the bar width and spacing
         bar_width = chart_width / (len(chart_data) * 2)
         bar_spacing = bar_width
 
-        #Find the maximum actual percentage for scaling
+        # Find the maximum actual percentage for scaling
         max_actual_percentage = max(data[1] for data in chart_data)
 
-        #Create a turtle for drawing the chart
+        # Create a turtle for drawing the chart
         chart_turtle = turtle.Turtle()
         chart_turtle.penup()
         chart_turtle.goto(chart_origin_x, chart_origin_y)
         chart_turtle.pendown()
 
-        #Draw the bars
+        # Draw the bars
         for target_percentage, actual_percentage in chart_data:
-            #Calculate the bar height
-            bar_height = (actual_percentage / max_actual_percentage) * chart_height
+            if max_actual_percentage == 0:
+                bar_height = 0  # Set bar height to zero if max_actual_percentage is zero
+            else:
+                bar_height = (actual_percentage / max_actual_percentage) * chart_height
 
-            #Draw the bar
+            # Draw the bar
             chart_turtle.left(90)
             chart_turtle.forward(bar_height)
             chart_turtle.right(90)
@@ -280,12 +292,18 @@ class BudgetGUI:
             chart_turtle.forward(bar_height)
             chart_turtle.left(90)
 
-        #Hide the turtle and exit on click
+            # Move to the next bar position
+            chart_turtle.penup()
+            chart_turtle.forward(bar_spacing)
+            chart_turtle.pendown()
+
+        # Hide the turtle and exit on click
         chart_turtle.hideturtle()
         screen.exitonclick()
 
-        #Save the data and chart
+        # Save the data and chart
         self.saveDataAndChart(userTransactionsDF, chart_data)
+
 
     def saveDataAndChart(self, userTransactionsDF, chart_data):
         #Get the current data and time
@@ -308,8 +326,6 @@ class BudgetGUI:
         tkinter.messagebox.showinfo("Save Successful", f"Data and chart saved.\nData File: {data_filename}\nChart File: {chart_filename}")
 
     def runPreviousData(self, frame):
-        for widget  in frame.winfo_children():
-            widget.destroy()
 
         folder_name = "BudgetingData"
         files = []
@@ -322,6 +338,9 @@ class BudgetGUI:
         if not files:
             tkinter.messagebox.showinfo("No Previous Data", "No previous data found.")
             return
+        else:
+            for widget  in frame.winfo_children():
+                widget.destroy()
 
         #Create a new window to display the previous data
         previousDataWindow = tkinter.Toplevel(self.root)
