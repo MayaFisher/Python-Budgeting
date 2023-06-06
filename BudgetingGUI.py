@@ -1,17 +1,22 @@
+
 import Budgeting4
+import pandas as pd
+import numpy as np
+import datetime
+from datetime import date
+import re
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter.filedialog
 import tkinter.messagebox
 import tkinter.font
 import tkinter.simpledialog
 from tkinter import *
 from tkinter import ttk
-import turtle
 from pandastable import Table
 import ast
-import datetime
 import os
-import numpy as np
-
 
 
 class BudgetGUI:
@@ -28,7 +33,7 @@ class BudgetGUI:
 
         window_width = 600
         window_height = 400
-
+        
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
 
@@ -61,14 +66,14 @@ class BudgetGUI:
             command=lambda: self.setBudgetType(mainmenuframe)
         )
         prevData.pack(
-            ipadx = 5,
-            ipady = 5,
-            expand = True
+            ipadx=5,
+            ipady=5,
+            expand=True
         )
         runbudget.pack(
-            ipadx = 5,
-            ipady = 5,
-            expand =  True
+            ipadx=5,
+            ipady=5,
+            expand=True
         )
 
     def setBudgetType(self, frame):
@@ -89,14 +94,14 @@ class BudgetGUI:
             command=lambda: self.setBudgetCategories(frame)
         )
         recBudget.pack(
-            ipadx = 5,
-            ipady = 5,
-            expand = True
+            ipadx=5,
+            ipady=5,
+            expand=True
         )
         ownBudget.pack(
-            ipadx = 5,
-            ipady = 5,
-            expand = True
+            ipadx=5,
+            ipady=5,
+            expand=True
         )
 
     def recBudgetRun(self, frame, usePredefinedCategories):
@@ -149,9 +154,6 @@ class BudgetGUI:
 
         category = ttk.Entry(frame)
         category.pack()
-
-        value = value.get()
-        category = category.get()
 
         addButton = ttk.Button(
             frame,
@@ -252,58 +254,31 @@ class BudgetGUI:
         for widget in frame.winfo_children():
             widget.destroy()
 
-        # Create a turtle screen
-        screen = turtle.Screen()
-        screen.setup(width=800, height=600)
-        screen.title("Budget Chart")
+        #Create a figure and axis for the bar graph
+        fig, ax = plt.subplots(figsize=(8, 6))
+        width = 0.35 # Width of the bars
 
-        # Set up turtle chart parameters
-        chart_width = 400
-        chart_height = 300
-        chart_origin_x = -chart_width / 2
-        chart_origin_y = -chart_height / 2
+        target_percentages = [data[0] for data in chart_data]
+        actual_percentages = [data[1] for data in chart_data]
 
-        # Calculate the bar width and spacing
-        bar_width = chart_width / (len(chart_data) * 2)
-        bar_spacing = bar_width
+        # Create bar plots for target and actual percentages
+        ax.bar(np.arange(len(target_percentages)), target_percentages, width, label='Target Percentage')
+        ax.bar(np.arange(len(actual_percentages)) + width, actual_percentages, width, label='Actual Percentage')
 
-        # Find the maximum actual percentage for scaling
-        max_actual_percentage = max(data[1] for data in chart_data)
+        # Set labels, title, and ticks
+        ax.set_ylabel('Percentage')
+        ax.set_title('Budgeting Results')
+        ax.set_xticks(np.arange(len(target_percentages)) + width / 2)
+        ax.set_xticklabels([str(data[0]) for data in chart_data])
+        ax.legend()
 
-        # Create a turtle for drawing the chart
-        chart_turtle = turtle.Turtle()
-        chart_turtle.penup()
-        chart_turtle.goto(chart_origin_x, chart_origin_y)
-        chart_turtle.pendown()
+        # Attach the plot to the Tkinter frame
+        canvas = FigureCanvasTkAgg(fig, master=frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
 
-        # Draw the bars
-        for target_percentage, actual_percentage in chart_data:
-            if max_actual_percentage == 0:
-                bar_height = 0  # Set bar height to zero if max_actual_percentage is zero
-            else:
-                bar_height = (actual_percentage / max_actual_percentage) * chart_height
-
-            # Draw the bar
-            chart_turtle.left(90)
-            chart_turtle.forward(bar_height)
-            chart_turtle.right(90)
-            chart_turtle.forward(bar_width)
-            chart_turtle.right(90)
-            chart_turtle.forward(bar_height)
-            chart_turtle.left(90)
-
-            # Move to the next bar position
-            chart_turtle.penup()
-            chart_turtle.forward(bar_spacing)
-            chart_turtle.pendown()
-
-        # Hide the turtle and exit on click
-        chart_turtle.hideturtle()
-        screen.exitonclick()
-
-        # Save the data and chart
+        #Save the data and chart
         self.saveDataAndChart(userTransactionsDF, chart_data)
-
 
     def saveDataAndChart(self, userTransactionsDF, chart_data):
         #Get the current data and time
@@ -320,7 +295,7 @@ class BudgetGUI:
 
         # Save the chart as an image file
         chart_filename = f"{folder_name}/budget_chart_{current_datetime.strftime('%Y%m%d_%H%M%S')}.png"
-        turtle.getscreen().getcanvas().postscript(file=chart_filename)
+        plt.savefig(chart_filename)
         
         # Show a message box to notify the user
         tkinter.messagebox.showinfo("Save Successful", f"Data and chart saved.\nData File: {data_filename}\nChart File: {chart_filename}")
