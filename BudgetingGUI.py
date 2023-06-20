@@ -1,10 +1,9 @@
-
++                                                                                                                                      
 import Budgeting4
 import pandas as pd
 import numpy as np
 import datetime
 from datetime import date
-import re
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -254,31 +253,39 @@ class BudgetGUI:
         for widget in frame.winfo_children():
             widget.destroy()
 
-        #Create a figure and axis for the bar graph
+        # Create a figure and axis for the bar graph
         fig, ax = plt.subplots(figsize=(8, 6))
-        width = 0.35 # Width of the bars
+        width = 0.35  # Width of the bars
 
         target_percentages = [data[0] for data in chart_data]
         actual_percentages = [data[1] for data in chart_data]
 
         # Create bar plots for target and actual percentages
-        ax.bar(np.arange(len(target_percentages)), target_percentages, width, label='Target Percentage')
-        ax.bar(np.arange(len(actual_percentages)) + width, actual_percentages, width, label='Actual Percentage')
+        target_bars = ax.bar(np.arange(len(target_percentages)) - width/2, target_percentages, width, label='Target Percentage')
+        actual_bars = ax.bar(np.arange(len(actual_percentages)) + width/2, actual_percentages, width, label='Actual Percentage')
 
         # Set labels, title, and ticks
         ax.set_ylabel('Percentage')
         ax.set_title('Budgeting Results')
-        ax.set_xticks(np.arange(len(target_percentages)) + width / 2)
+        ax.set_xticks(np.arange(len(target_percentages)))
         ax.set_xticklabels([str(data[0]) for data in chart_data])
         ax.legend()
+
+        # Add text annotations to actual bars
+        for actual_bar in actual_bars:
+            height = actual_bar.get_height()
+            ax.text(actual_bar.get_x() + actual_bar.get_width()/2, height,
+                    f'{height:.1f}%', ha='center', va='bottom')
 
         # Attach the plot to the Tkinter frame
         canvas = FigureCanvasTkAgg(fig, master=frame)
         canvas.draw()
         canvas.get_tk_widget().pack()
 
-        #Save the data and chart
+        # Save the data and chart
         self.saveDataAndChart(userTransactionsDF, chart_data)
+
+
 
     def saveDataAndChart(self, userTransactionsDF, chart_data):
         #Get the current data and time

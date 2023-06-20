@@ -9,8 +9,8 @@ def runcalc(filepath):
 
     #get the user file
     userTransactionsDF = getUserTransactions(filepath)
-
-    #get specifict date range in data frame
+   
+    #get specific date range in data frame
     userTransactionsDF = pickdates(userTransactionsDF)
 
     return userTransactionsDF
