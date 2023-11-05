@@ -1,14 +1,13 @@
 #importing necessary libraries
 from calendar import month
 from operator import contains
+import tkinter as tk
 from tkinter import LAST
+from tkinter import filedialog
 
 #needed for manipulating data
 import pandas as pd
 import numpy as np
-
-#need to enable Google Drive API
-import gspread
 
 #needed to build dashboard
 import panel as pn
@@ -18,13 +17,18 @@ import holoviews as hv
 hv.extension('bokeh')
 from datetime import date
 
+def browse_file():
+    global filepath
+    filepath = filedialog.askopenfilename()  # Opens dialog to browse files
+    
+# Create the main window
+root = tk.Tk()
+root.withdraw()  # Hides the main window
 
-#connect to google drive
-gc = gspread.service_account(filename="service_account.json")
-sh = gc.open("transactions")
+# Open the file dialog
+browse_file()
 
-ws = sh.worksheet('transactions')
-df = pd.DataFrame(ws.get_all_records()) #import data from csv into dataframe
+df = pd.read_csv(filepath, low_memory=False) #import data from csv into dataframe
 
 #clean dataframe
 df = df[['Date', 'Description', 'Amount', 'Transaction Type', 'Account Name']]  #keeps only necessary columns
@@ -257,7 +261,7 @@ def plot_expenses(category):
     else:
         plot_df = monthly_expenses_trend_by_cat[monthly_expenses_trend_by_cat['Category'] == category].groupby('Month-Year').sum()
 
-    plot = plot_df.hvplot.bar(x='Month-Year', y='Amount')
+    plot = plot_df.hvplot.bar(x='Month-Year', y='Amount ')
     return plot
 
 #defines update_plot
@@ -302,10 +306,6 @@ select_category.param.watch(update_summary_table, 'value')
 template = pn.template.FastListTemplate(
     title="Personal Finances Summary",
     sidebar=[
-        pn.pane.Markdownn("## *If you can't manage your money, making more won't help*"),
-        pn.pane.PNG('vecteezy_pack-of-dollars-money-clipart-design-illustration_9303600_278.png', sizing_mode='scale_both'),
-        pn.pane.Markdown(""),
-        pn.pane.Markdown(""),
         select_category
         ],
     main=[
