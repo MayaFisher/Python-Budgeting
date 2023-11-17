@@ -1,38 +1,40 @@
-##Name
+Personal Finance Dashboard
+Description
 
+This Personal Finance Dashboard is a Python-based tool that allows users to visualize and categorize their personal financial transactions. Utilizing libraries like pandas, numpy, tkinter, and panel, the dashboard offers a comprehensive view of expenses, incomes, savings, and more.
+Features
 
+    File Browsing: Select financial data files for analysis.
+    Data Cleaning and Processing: Clean and process transaction data for accurate categorization.
+    Dynamic Categorization: Automatically categorize transactions into predefined categories like Groceries, Rent, Eating Out, etc.
+    Monthly Summary: Generate summaries of the latest month's income, recurring and non-recurring expenses, and savings.
+    Interactive Dashboard: View your financial data through interactive charts and tables.
 
-##Description
+Installation
 
-This project is designed to help the user get an overall view of their finances.
+To use this dashboard, you need to have Python installed on your computer. Additionally, the following Python libraries are required:
 
-##Libaries Needed
+bash
 
+pip install pandas numpy panel hvplot holoviews
 
+Usage
 
-##Usage
+    Start the Program: Run the script to open the file dialog and select your CSV file containing the transaction data.
+    Data Processing: The script will automatically process and categorize your transactions.
+    View Dashboard: The dashboard will be displayed with various widgets and visualizations.
 
+File Format
 
+Your financial data should be in a CSV format with the following columns:
 
-##Support
+    Date
+    Description
+    Amount
+    Transaction Type
+    Account Name
 
+Contributing
 
-
-##Roadmap
-
-Include the ability to save data for later viewing and comparison.
-
-
-##Contributing
-
-
-
-##Authors and Acknowledgements
-Maya Fisher
-
-
-
-##Status
-
-Functional and working.
-Any further functionality to be added later.
+Contributions to this project are welcome. Please fork the repository and submit a pull request with your changes.
+License
