@@ -31,7 +31,6 @@ Your financial data should be in a CSV file with the following columns:
     Date
     Description
     Amount
-    Transaction Type
     Account Name
 
 Contributing
