@@ -1,32 +1,32 @@
 Personal Finance Dashboard
 Description
 
-This Personal Finance Dashboard is a Python-based tool that allows users to visualize and categorize their personal financial transactions. Utilizing libraries like pandas, numpy, tkinter, and panel, the dashboard offers a comprehensive view of expenses, incomes, savings, and more.
+The Personal Finance Dashboard is an intuitive Python tool designed to help users visualize and manage their finances. Leveraging powerful libraries like pandas, numpy, tkinter, and panel, it provides an insightful overview of your financial activities including expenses, income, and savings.
 Features
 
-    File Browsing: Select financial data files for analysis.
-    Data Cleaning and Processing: Clean and process transaction data for accurate categorization.
-    Dynamic Categorization: Automatically categorize transactions into predefined categories like Groceries, Rent, Eating Out, etc.
-    Monthly Summary: Generate summaries of the latest month's income, recurring and non-recurring expenses, and savings.
-    Interactive Dashboard: View your financial data through interactive charts and tables.
+    File Browsing: Easily select and import financial data (.csv format).
+    Data Cleaning and Processing: Ensures your financial data is accurate and reliable.
+    Dynamic Categorization: Transactions are automatically sorted into categories like Groceries, Rent, and Eating Out.
+    Monthly Summary: Get a snapshot of your monthly financial activities, highlighting income, expenses (recurring and non-recurring), and savings.
+    Interactive Dashboard: Explore your financial data through engaging charts and tables.
 
 Installation
 
-To use this dashboard, you need to have Python installed on your computer. Additionally, the following Python libraries are required:
+Ensure you have Python installed on your machine. Install the required libraries using:
 
 bash
 
-pip install pandas numpy panel hvplot holoviews
+pip install pandas numpy panel hvplot holoviews datetime
 
 Usage
 
-    Start the Program: Run the script to open the file dialog and select your CSV file containing the transaction data.
-    Data Processing: The script will automatically process and categorize your transactions.
-    View Dashboard: The dashboard will be displayed with various widgets and visualizations.
+    Start the Program: Execute the script to open a file dialog and choose your CSV file with transaction data.
+    Data Processing: The script will process and categorize your transactions automatically.
+    View Dashboard: Interact with your data using the generated dashboard filled with various widgets and visualizations.
 
 File Format
 
-Your financial data should be in a CSV format with the following columns:
+Your financial data should be in a CSV file with the following columns:
 
     Date
     Description
@@ -36,5 +36,12 @@ Your financial data should be in a CSV format with the following columns:
 
 Contributing
 
-Contributions to this project are welcome. Please fork the repository and submit a pull request with your changes.
-License
+We welcome contributions! To contribute:
+
+    Fork the repository.
+    Make your changes.
+    Submit a pull request with a clear description of your improvements.
+
+Contact
+
+For any questions or intrest in contributing please email me at mayaafisher@gmail.com
