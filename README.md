@@ -16,6 +16,9 @@ The Personal Finance Dashboard is an intuitive Python tool designed to help user
 
 Ensure you have Python installed on your machine. Install the required libraries using:
 
+```bash
+pip install pandas numpy panel hvplot holoviews datetime
+```
 
 ## Usage
 
