@@ -141,7 +141,7 @@ df['Category'] = np.where(df['Description'].str.contains
                           'Excluded', df['Category'])
 
 #changes to date column
-df['Date'] = pd.to_datetime(df['Date']) #conver to datetime format
+df['Date'] = pd.to_datetime(df['Date']) #convert to datetime format
 
 df['Month'] = df['Date'].dt.month       #extract month and make new column
 df['Year'] = df['Date'].dt.year         #extract year and make new column
